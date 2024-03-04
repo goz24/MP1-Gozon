@@ -1,0 +1,97 @@
+import React, { useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  Button,
+  Text,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
+
+export default function App() {
+  const [todoList, setTodoList] = useState([]);
+  const [newItem, setNewItem] = useState('');
+
+  function handleNewItem(enteredText) {
+    setNewItem(enteredText);
+  }
+
+  function addNewItem() {
+    setTodoList((prevList) => [
+      ...prevList,
+      {
+        id: Math.random().toString(),
+        text: newItem,
+        backgroundColor: randomBgcol(),
+      },
+    ]);
+
+    setNewItem('');
+  }
+
+  function randomBgcol() {
+    const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+    return '#' + randomColor;
+  }
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.texttodo}
+          placeholder="My List"
+          onChangeText={handleNewItem}
+          value={newItem}
+        />
+        <TouchableOpacity
+          style={{ backgroundColor: 'green', padding:15, borderRadius: 10 }}
+          onPress={addNewItem}>
+          <Text style={{ color: 'white' }}>Input</Text>
+        </TouchableOpacity>
+      </View>
+
+      <FlatList
+        data={todoList}
+        renderItem={({ item }) => (
+          <View
+            style={[styles.goalsContainer, { backgroundColor: item.backgroundColor }]}
+          >
+            <Text style={styles.item}>&#8226; {item.text}</Text>
+          </View>
+        )}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: 50,
+    paddingHorizontal: 16,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingBottom: 24,
+    borderBottomWidth: 1,
+  },
+  texttodo: {
+    borderWidth: 1,
+    width: '70%',
+    marginRight: 8,
+    padding: 8,
+    borderRadius: 5,
+  },
+  goalsContainer: {
+    paddingTop: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    marginVertical: 4,
+    borderRadius: 8,
+  },
+  item: {
+    color: 'white',
+  },
+});
